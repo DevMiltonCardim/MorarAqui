@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export const CardPropriets = ({
   id,
   titulo,
-  imagem,
+  capa,
   preco,
   localizacao,
   quartos,
@@ -20,7 +20,7 @@ export const CardPropriets = ({
     <Link to={`/detalhes/${id}`}>
       <div className="h-120 w-full shadow-lg rounded-b-xl">
         <div className={`h-1/2 w-full overflow-hidden relative rounded-t-xl`}>
-          <img src={imagem} alt={titulo} className="object-cover" />
+          <img src={capa} alt={titulo} className="object-cover" />
           <div className="bg-[#D87C50] text-white font-semibold px-3 py-1 absolute top-4 left-4 rounded-lg">
             {negocio === 'venda' ? 'Venda' : 'Aluguel'}
           </div>
