@@ -18,7 +18,8 @@ export const CardList = ({ propriedades }: CardListProps) => {
           descricao={imovel.descricao}
           imagens={imovel.imagens}
           titulo={imovel.titulo}
-          localizacao={imovel.localizacao}
+          nomeBairro={imovel.nomeBairro}
+          nomeCidade={imovel.nomeCidade}
           preco={imovel.preco}
           area={imovel.area}
           vagas={imovel.vagas}

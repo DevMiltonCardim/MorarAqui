@@ -8,7 +8,8 @@ export const CardPropriets = ({
   titulo,
   capa,
   preco,
-  localizacao,
+  nomeBairro,
+  nomeCidade,
   quartos,
   banheiros,
   area,
@@ -32,7 +33,7 @@ export const CardPropriets = ({
             </h4>
             <p className="flex items-center gap-2 text-gray-500 text-sm">
               <FaLocationDot />
-              {localizacao}
+              {nomeBairro} - {nomeCidade}
             </p>
           </div>
           <div className="flex items-center gap-3 text-gray-500 border-b border-gray-400 pb-4">

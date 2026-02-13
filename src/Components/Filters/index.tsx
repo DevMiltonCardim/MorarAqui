@@ -1,13 +1,16 @@
 import { FaHouseChimney, FaKey } from "react-icons/fa6"
 import MaisFilters from "./MaisFilters"
 import { useState } from "react"
+import type { IFiltrosAvancados } from "../../types/propriedade";
 
 interface FilterProps {
   isActiveFilter: string;
   setIsActiveFilter: (filter: string) => void;
+  filtros: IFiltrosAvancados;
+  setFiltros: React.Dispatch<React.SetStateAction<IFiltrosAvancados>>
 }
 
-const Filters = ({ isActiveFilter, setIsActiveFilter }: FilterProps) => {
+const Filters = ({ isActiveFilter, setIsActiveFilter, filtros, setFiltros }: FilterProps) => {
 
   const getButtonStyles = (filterName: string) => {
     const isActive = isActiveFilter === filterName;
@@ -42,7 +45,10 @@ const Filters = ({ isActiveFilter, setIsActiveFilter }: FilterProps) => {
           </button>
       </section>
       <div>
-        <MaisFilters />
+        <MaisFilters 
+          filtros={filtros} 
+          setFiltros={setFiltros}
+        />
       </div>
     </section>
   )

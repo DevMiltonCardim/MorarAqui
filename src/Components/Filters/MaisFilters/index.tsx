@@ -3,20 +3,23 @@ import { FaChevronDown, FaSliders } from "react-icons/fa6"
 import { FilterSelect } from "./FilterSelect";
 import { PriceFilter } from "./PriceFilter";
 import { VscChromeClose } from "react-icons/vsc";
-import { IoSearchSharp } from "react-icons/io5";
+import type { IFiltrosAvancados } from "../../../types/propriedade";
 
-const MaisFilters = () => {
+interface MaisFiltersProps {
+  filtros: IFiltrosAvancados;
+  setFiltros: React.Dispatch<React.SetStateAction<IFiltrosAvancados>>;
+}
+
+const MaisFilters = ({ filtros, setFiltros }: MaisFiltersProps) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [cidade, setCidade] = useState('Todas');
-  const [tipoDeImovel, setTipoDeImovel] = useState('Todos');
-  const [quartos, setQuartos] = useState('Qualquer');
-  const [banheiros, setBanheiros] = useState('Qualquer');
-  const [vagas, setVagas] = useState('Qualquer');
-
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const updateFiltro = (campo: keyof IFiltrosAvancados, valor: any) => {
+    setFiltros(prev => ({
+      ...prev,
+      [campo]: valor
+    }))
+  }
 
   return (
     <div className="px-3 mt-4">
@@ -38,73 +41,68 @@ const MaisFilters = () => {
             <FilterSelect
               label="Cidade"
               options={["Todas", "Ibirataia", "Ipiaú"]}
-              value={cidade}
-              onChange={setCidade}
+              value={filtros.cidade}
+              onChange={(novoValor) => updateFiltro('cidade', novoValor)}
             />
           </div>
           <div className="col-span-2 mt-4">
             <FilterSelect
               label="Tipo de Imóvel"
               options={["Todos", "Casa", "Apartamento", "Cobertura", "Mansão", "Terreno", "Comercial"]}
-              value={tipoDeImovel}
-              onChange={setTipoDeImovel}
+              value={filtros.tipoDeImovel}
+              onChange={(novoValor) => updateFiltro('tipoDeImovel', novoValor)}
             />
           </div>
           <div className="col-span-2 mt-4">
-            <PriceFilter 
-              minPrice={minPrice}
-              setMinPrice={setMinPrice}
-              maxPrice={maxPrice}
-              setMaxPrice={setMaxPrice}
+            <PriceFilter
+              minPrice={filtros.minPrice}
+              setMinPrice={(valor) => updateFiltro('minPrice', valor)}
+              maxPrice={filtros.maxPrice}
+              setMaxPrice={(valor) => updateFiltro('maxPrice', valor)}
             />
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <FilterSelect
               label="Quartos"
               options={['Qualquer', '1', '2', '3+']}
-              value={quartos}
-              onChange={setQuartos}
+              value={filtros.quartos === 0 ? 'Qualquer' : `${filtros.quartos}${filtros.quartos === 3 ? '+' : ''}`}
+              onChange={(val) => {
+                const num = val === 'Qualquer' ? 0 : parseInt(val);
+                updateFiltro('quartos', num)
+              }}
             />
             <FilterSelect
               label="Banheiros"
               options={['Qualquer', '1', '2', '3+']}
-              value={banheiros}
-              onChange={setBanheiros}
+              value={filtros.banheiros === 0 ? 'Qualquer' : `${filtros.banheiros}${filtros.banheiros === 3 ? '+' : ''}`}
+              onChange={(val) => {
+                const num = val === 'Qualquer' ? 0 : parseInt(val);
+                updateFiltro('banheiros', num)
+              }}
             />
           </div>
           <div className="col-span-2 mt-4">
             <FilterSelect
               label="Vagas"
               options={["Qualquer", "1+", "2+"]}
-              value={vagas}
-              onChange={setVagas}
+              value={filtros.vagas === 0 ? 'Qualquer' : `${filtros.vagas}${filtros.vagas === 3 ? '+' : ''}`}
+              onChange={(val) => {
+                const num = val === 'Qualquer' ? 0 : parseInt(val);
+                updateFiltro('vagas', num)
+              }}
             />
           </div>
 
-          <div className="flex flex-col gap-4 mt-10">
+          <div className="flex flex-col mt-10">
             <button 
-              onClick={() => {
-                setQuartos('Qualquer');
-                setBanheiros('Qualquer');
-                setVagas('Qualquer');
-                setCidade('Todas');
-                setTipoDeImovel('Todos');
-                setMinPrice("");
-                setMaxPrice("");
-              }}
+              onClick={() => setFiltros({
+                cidade: 'Todas', tipoDeImovel: 'Todos', quartos: 0,
+                banheiros: 0, vagas: 0, minPrice: '', maxPrice: ''
+              })}
               className="flex items-center gap-2 w-full py-2 pl-4 border-2 border-black rounded-md font-semibold text-lg text-black active:bg-gray-100 transition-all"
             >
               <VscChromeClose className="mt-0.5" size={15} />
               Limpar
-            </button>
-            <button 
-              onClick={() => {
-                console.log("Iniciando busca com:", {quartos, banheiros, vagas, minPrice, maxPrice });
-              }}
-              className="flex items-center gap-2 w-full py-2 pl-4 bg-[#D87C50] rounded-md font-semibold text-lg text-white shadow-lg shadow-[#D87C50]/20"
-            >
-              <IoSearchSharp className="mt-0.5"/>
-              Buscar
             </button>
           </div>
         </div>
