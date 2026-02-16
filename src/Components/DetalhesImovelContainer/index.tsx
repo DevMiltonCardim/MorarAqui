@@ -27,7 +27,7 @@ export const DetalhesImovelContainer = ({ imovel }: Props) => {
         </h3>
         <p className="flex items-center text-gray-600 gap-1 text-sm">
           <FaLocationDot size={18} />
-          {imovel.localizacao}
+          {imovel.nomeBairro} - {imovel.nomeCidade}
         </p>
       </div>
       <div className="flex gap-3 pb-5">
