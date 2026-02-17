@@ -1,7 +1,20 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../../assets/Logo-empresa.png'
 
-const Header = () => {
+interface isLoggedHeaderProps {
+  isLoggedIn: boolean;
+}
+
+const Header = ({ isLoggedIn }: isLoggedHeaderProps) => {
+  const navigate = useNavigate();
+
+  const handleAnunciarClick = () => {
+    if (isLoggedIn) {
+      navigate("/anunciar")
+    } else {
+      navigate("/login", { state: { from: "/anunciar" } });
+    }
+  }
 
   return (
     <header className='w-full bg-gray-50'>
@@ -15,9 +28,9 @@ const Header = () => {
         </div>
 
         <div className='flex items-center gap-4 pr-2'>
-            <div className='flex flex-col'>
-              <Link to="/login" className='text-xl hover:text-[#D87C50]'>Anunciar</Link>
-            </div>
+          <div className='flex flex-col'>
+            <button onClick={handleAnunciarClick} className='text-xl hover:text-[#D87C50]'>Anunciar</button>
+          </div>
         </div>
 
 
