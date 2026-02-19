@@ -18,17 +18,17 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path='/' element={<Layout isLoggedIn={isLoggedIn}/>}>
+      <Route path='/' element={<Layout isLoggedIn={isLoggedIn} />}>
         <Route index element={<Home />} />
         <Route path='detalhes/:id' element={<PaginaProduto />} />
+        <Route
+          path='anunciar'
+          element={isLoggedIn ? <Anunciar /> : <Navigate to={"/login"} replace />}
+        />
       </Route>
-      <Route 
-        path='/anunciar'
-        element={isLoggedIn ? <Anunciar /> : <Navigate to={"/login"} replace />}
-      />
-      <Route 
-        path='/login' 
-        element={isLoggedIn ? <Navigate to="/" replace /> : <Login setIsLoggedIn={setIsLoggedIn}/>} 
+      <Route
+        path='/login'
+        element={isLoggedIn ? <Navigate to="/" replace /> : <Login setIsLoggedIn={setIsLoggedIn} />}
       />
     </Routes>
   )
