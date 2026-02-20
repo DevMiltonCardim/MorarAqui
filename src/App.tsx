@@ -6,6 +6,7 @@ import Login from './Pages/Login'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Anunciar from './Pages/Anunciar'
+import Cadastro from './Pages/Cadastro'
 
 function AppRoutes() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,6 +30,10 @@ function AppRoutes() {
       <Route
         path='/login'
         element={isLoggedIn ? <Navigate to="/" replace /> : <Login setIsLoggedIn={setIsLoggedIn} />}
+      />
+      <Route
+        path='/cadastro'
+        element={isLoggedIn ? <Navigate to="/" replace /> : <Cadastro setIsLoggedIn={setIsLoggedIn} />}
       />
     </Routes>
   )

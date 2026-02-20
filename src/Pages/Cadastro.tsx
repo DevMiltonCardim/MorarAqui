@@ -5,12 +5,17 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa6';
 import { CgArrowLongLeft } from "react-icons/cg";
 import { FaKey } from 'react-icons/fa';
+import { CgArrowLongRight } from "react-icons/cg";
+import { FaPhoneAlt } from "react-icons/fa";
+import { MdDriveFileRenameOutline } from "react-icons/md";
+
+
 
 interface LoggedProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
 
-const Login = ({ setIsLoggedIn }: LoggedProps) => {
+const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -36,10 +41,22 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
           </h1>
         </div>
         <div className='flex justify-center mt-6'>
-          <h1 className='text-2xl font-medium'>Acesse sua conta</h1>
+          <h1 className='text-2xl font-medium'>Quem é você?</h1>
         </div>
         <form onSubmit={onSubmit} className='flex flex-col mt-8 w-full px-8'>
           <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-1'>
+              <label className='pl-1 text-sm'>Nome Completo:</label>
+              <div className={`${divInputStyle}`}>
+                <MdDriveFileRenameOutline />
+                <input
+                  className={`${inputStyle}`}
+                  type="text"
+                  placeholder='Seu nome completo'
+                  required
+                />
+              </div>
+            </div>
             <div className='flex flex-col gap-1'>
               <label className='pl-1 text-sm'>Email:</label>
               <div className={`${divInputStyle}`}>
@@ -52,40 +69,40 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
                 />
               </div>
             </div>
+
+            <div className='flex flex-col gap-1'>
+              <label className='pl-1 text-sm'>Telefone:</label>
+              <div className={`${divInputStyle}`}>
+                <FaPhoneAlt />
+                <input
+                  className={`${inputStyle}`}
+                  type="tel"
+                  placeholder='Seu telefone aqui...'
+                  required
+                />
+              </div>
+            </div>
+
             <div className='flex flex-col gap-1'>
               <label className='pl-1 text-sm'>Senha:</label>
               <div className={`${divInputStyle}`}>
-                <FaKey />
+                <FaLock />
                 <input
                   className={`${inputStyle}`}
-                  type="senha"
+                  type="password"
                   placeholder='Sua senha aqui...'
-                  maxLength={8}
                   required
                 />
               </div>
             </div>
           </div>
-          <div className='flex justify-between pt-1'>
-
-            <a
-              href="#"
-              className='mt-1 text-sm text-[#D97C50] underline'
-            >
-              Esqueci minha senha
-            </a>
-          </div>
-          <button type='submit' className='flex items-center justify-center mt-5 bg-[#D97C50] py-3 rounded-xl text-white text-xl'>
-            Entrar
+          <button type='submit' className='flex items-center justify-center mt-5 bg-[#D97C50] py-3 rounded-xl text-white text-xl gap-2'>
+            <a>Criar conta</a>
           </button>
 
           <div className='flex justify-center mt-4 gap-1 text-sm'>
-            <p>Não tem uma conta?</p>
-            <a href="/cadastro" className='text-[#D97C50]'>Criar conta</a>
-          </div>
-          <div className='flex items-center justify-center mt-4 gap-2 text-sm'>
-            <CgArrowLongLeft color='#D97C50'/>
-            <a href="/" className='text-[#D97C50]'>Ver imóveis sem entrar</a>
+            <p>Já tem uma conta?</p>
+            <a href="/login" className='text-[#D97C50]'>Entrar</a>
           </div>
         </form>
       </div>
@@ -94,4 +111,4 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
   )
 }
 
-export default Login;
+export default Cadastro;

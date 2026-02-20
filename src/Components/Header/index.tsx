@@ -27,9 +27,9 @@ const Header = ({ isLoggedIn }: isLoggedHeaderProps) => {
           </h1>
         </div>
 
-        <div className='flex items-center gap-4 pr-2'>
+        <div className='flex items-center gap-4 pr-2 border-2 border-[#D87C50] rounded-lg px-3 py-1'>
           <div className='flex flex-col'>
-            <button onClick={handleAnunciarClick} className='text-xl hover:text-[#D87C50]'>Anunciar</button>
+            <button onClick={handleAnunciarClick} className='text-[16px] hover:text-[#D87C50]'>Anunciar Imóvel</button>
           </div>
         </div>
 
