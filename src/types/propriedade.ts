@@ -4,7 +4,7 @@ export interface IPropriedade {
   descricao: string;
   capa: string;
   imagens?: string[];
-  preco: string;
+  preco: number | string;
   pontoReferencia?: string;
   nomeBairro: string;
   nomeCidade: string;

@@ -30,9 +30,16 @@ const Home = () => {
     const matchBanheiros = filtrosAvancados.banheiros === 0 || (imovel.banheiros ?? 0) >= filtrosAvancados.banheiros;
     const matchVagas = filtrosAvancados.vagas === 0 || (imovel.vagas ?? 0) >= filtrosAvancados.vagas;
 
-    const precoLimpo = parseFloat(imovel.preco.replace(/\./g, '').replace(',', '.'));
-    const min = filtrosAvancados.minPrice ? parseFloat(filtrosAvancados.minPrice.replace(/\./g, '').replace(',', '.')) : 0;
-    const max = filtrosAvancados.maxPrice ? parseFloat(filtrosAvancados.maxPrice.replace(/\./g, '').replace(',', '.')) : Infinity;
+    const converterParaNumero = (valor: string | number) => {
+      if (typeof valor === 'number') return valor; // Se já for número, retorna ele
+      if (!valor) return 0;
+      // Se for string, limpa e converte
+      return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+    };
+
+    const precoLimpo = converterParaNumero(imovel.preco);
+    const min = filtrosAvancados.minPrice ? converterParaNumero(filtrosAvancados.minPrice) : 0;
+    const max = filtrosAvancados.maxPrice ? converterParaNumero(filtrosAvancados.maxPrice) : Infinity;
     const matchPreco = precoLimpo >= min && precoLimpo <= max;
 
     return matchNegocio && matchCidade && matchTipo && matchQuartos && matchBanheiros && matchVagas && matchPreco;
