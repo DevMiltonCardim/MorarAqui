@@ -9,7 +9,7 @@ import Anunciar from './Pages/Anunciar'
 import Cadastro from './Pages/Cadastro'
 
 function AppRoutes() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
 
   const handleLogin = () => {

@@ -19,13 +19,15 @@ const Header = ({ isLoggedIn }: isLoggedHeaderProps) => {
   return (
     <header className='w-full bg-gray-50'>
       <nav className='w-full relative flex items-center justify-between px-2 py-3 shadow-sm'>
-        <div className='flex items-center gap-2'>
-          <img src={Logo} alt="" className="w-10 h-10 md:w-12 md:h-12" />
-          <h1 className='font-[Righteous] text-xl md:text-2xl'>
-            <span className='text-[#456077]'>Morar</span>
-            <span className='text-[#D87C50]'>Aqui</span>
-          </h1>
-        </div>
+        <Link to="/">
+          <div className='flex items-center gap-2'>
+            <img src={Logo} alt="" className="w-10 h-10 md:w-12 md:h-12" />
+            <h1 className='font-[Righteous] text-xl md:text-2xl'>
+              <span className='text-[#456077]'>Morar</span>
+              <span className='text-[#D87C50]'>Aqui</span>
+            </h1>
+          </div>
+        </Link>
 
         <div className='flex items-center gap-4 pr-2 border-2 border-[#D87C50] rounded-lg px-3 py-1'>
           <div className='flex flex-col'>
