@@ -5,6 +5,8 @@ import foto1 from "../assets/casa-2.jpg"
 export const listaImoveis: IPropriedade[] = [
     {
       id: 1,
+      ativo: true,
+      userId: 123,
       titulo: "Lote no Condomínio Solar",
       descricao: "Lote grande localizado no bairro novo",
       preco: 150000.00,
@@ -21,6 +23,8 @@ export const listaImoveis: IPropriedade[] = [
     },
     {
       id: 2,
+      ativo: true,
+      userId: 123,
       titulo: "Casa Moderna com Piscina",
       descricao: "Casa estilo moderna em boa localização na cidade de Ibirataia",
       preco: 5500.00,
