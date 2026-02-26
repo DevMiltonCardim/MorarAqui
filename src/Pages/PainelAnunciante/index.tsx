@@ -3,11 +3,32 @@ import { listaImoveis } from "../../data/imoveis";
 import type { IPropriedade } from "../../types/propriedade";
 import ImovelGestaoCard from "./ImovelGestaoCard";
 import { DashboardHeader } from "./DashboardHeader";
+import { api } from "../../services/api";
 
 const PainelAnunciante = () => {
   const [meusImoveis, setMeusImoveis] = useState<IPropriedade[]>(
     listaImoveis.filter(imovel => imovel.userId === 1)
   );
+
+  const [filtroStatus, setFiltroStatus] = useState<'todos' | 'ativos' | 'pausados'>('todos');
+
+  useEffect(() => {
+    const carregarMeusImoveis = async () => {
+      try {
+        const response = await api.get('/imoveis/meus');
+        setMeusImoveis(response.data);
+      } catch (err) {
+        console.error("Erro ao carregar seus anúncios", err);
+      }
+    };
+
+    carregarMeusImoveis();
+  }, [])
+  const imveisExibidos = meusImoveis.filter(imovel => {
+    if (filtroStatus === 'ativos') return imovel.ativo === true;
+    if (filtroStatus === 'pausados') return imovel.ativo === false;
+    return true;
+  })
 
   const handleToggleStatus = (id: number) => {
     setMeusImoveis(prev => prev.map(imovel =>
@@ -38,10 +59,10 @@ const PainelAnunciante = () => {
           + Novo Imóvel
         </button>
       </div>
-      <DashboardHeader imoveis={meusImoveis} />
+      <DashboardHeader imoveis={meusImoveis} filtroAtivo={filtroStatus} setFiltroAtivo={setFiltroStatus} />
 
       <div className="flex flex-col gap-4">
-        {meusImoveis.map(imovel => (
+        {imveisExibidos.map(imovel => (
           <ImovelGestaoCard
             key={imovel.id}
             imovel={imovel}
