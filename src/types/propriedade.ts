@@ -1,5 +1,7 @@
 export interface IPropriedade {
   id: number;
+  ativo: boolean;
+  userId: number;
   titulo: string;
   descricao: string;
   capa: string;
@@ -25,4 +27,8 @@ export interface IFiltrosAvancados {
   vagas: number;
   minPrice: string;
   maxPrice: string;
+}
+
+export interface IImovelGestao extends IPropriedade {
+  dataCriacao: string;
 }

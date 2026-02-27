@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../src/assets/Logo-empresa.png'
-import type { Dispatch, SetStateAction } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa6';
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdDriveFileRenameOutline } from "react-icons/md";
+import { api } from '../services/api';
 
 interface LoggedProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -14,13 +15,28 @@ const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoggedIn(true);
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [senha, setSenha] = useState('');
 
-    const destino = location.state?.from || "/perfil"
-    navigate(destino)
-  }
+  const handleCadastro = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await api.post('/usuarios/cadastrar', {
+        nome,
+        email,
+        whatsapp,
+        senha
+      });
+
+      alert('Cadastro realizado com sucesso! Agora faça seu login.');
+      navigate('/login');
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao cadastrar. Verifique os dados ou tente novamente.');
+    }
+  };
 
   const divInputStyle = 'flex items-center border rounded-lg px-3 bg-white focus-within:ring-2 focus-within:ring-[#D87C50] focus-within:border-[#D87C50] transition-all'
   const inputStyle = 'w-full p-2.5 outline-none bg-transparent text-gray-800 placeholder:text-gray-400'
@@ -38,7 +54,7 @@ const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
         <div className='flex justify-center mt-6'>
           <h1 className='text-2xl font-medium'>Quem é você?</h1>
         </div>
-        <form onSubmit={onSubmit} className='flex flex-col mt-8 w-full px-8'>
+        <form onSubmit={handleCadastro} className='flex flex-col mt-8 w-full px-8'>
           <div className='flex flex-col gap-3'>
             <div className='flex flex-col gap-1'>
               <label className='pl-1 text-sm'>Nome Completo:</label>
@@ -49,6 +65,8 @@ const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
                   type="text"
                   placeholder='Seu nome completo'
                   required
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </div>
             </div>
@@ -61,6 +79,8 @@ const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
                   type="email"
                   placeholder='Seu email aqui...'
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -74,6 +94,8 @@ const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
                   type="tel"
                   placeholder='Seu telefone aqui...'
                   required
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
                 />
               </div>
             </div>
@@ -87,6 +109,9 @@ const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
                   type="password"
                   placeholder='Sua senha aqui...'
                   required
+                  minLength={6}
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                 />
               </div>
             </div>

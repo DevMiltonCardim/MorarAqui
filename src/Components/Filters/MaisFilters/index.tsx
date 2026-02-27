@@ -25,7 +25,7 @@ const MaisFilters = ({ filtros, setFiltros }: MaisFiltersProps) => {
     <div className="px-3 mt-4">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex gap-2 text-md items-center justify-center w-full py-2 rounded-xl border-2 border-[#D87C50] ${isOpen ? 'text-white bg-[#D87C50]' : 'text-[#D87C50]'}`}
+        className={`flex gap-2 text-md items-center justify-center w-full py-2 cursor-pointer rounded-xl border-2 border-[#D87C50] ${isOpen ? 'text-white bg-[#D87C50]' : 'text-[#D87C50]'}`}
       >
         <FaSliders />
         Mais Filtros

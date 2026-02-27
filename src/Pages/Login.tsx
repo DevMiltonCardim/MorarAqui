@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../src/assets/Logo-empresa.png'
-import type { Dispatch, SetStateAction } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
 
 import { CgArrowLongLeft } from "react-icons/cg";
 import { FaKey } from 'react-icons/fa';
+import { api } from '../services/api';
 
 interface LoggedProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -14,12 +15,32 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoggedIn(true);
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
 
-    const destino = location.state?.from || "/perfil"
-    navigate(destino)
+  interface IUsuario {
+    id: string | number;
+    // adicione mais campos se necessário (nome, email etc.)
+  }
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // especifica o tipo esperado da resposta para que o TS saiba que 'usuario' tem um 'id'
+      const response = await api.post<{ token: string; }>(
+        '/login',
+        { email, senha }
+      );
+      const { token } = response.data;
+
+      localStorage.setItem('@MorarAqui:token', token);
+      // usa o id que vem dentro de 'usuario'
+
+      setIsLoggedIn(true);
+      navigate('/painel');
+    } catch (error) {
+      alert('E-mail ou senha incorretos!');
+    }
   }
 
   const divInputStyle = 'flex items-center border rounded-lg px-3 bg-white focus-within:ring-2 focus-within:ring-[#D87C50] focus-within:border-[#D87C50] transition-all'
@@ -38,7 +59,7 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
         <div className='flex justify-center mt-6'>
           <h1 className='text-2xl font-medium'>Acesse sua conta</h1>
         </div>
-        <form onSubmit={onSubmit} className='flex flex-col mt-8 w-full px-8'>
+        <form onSubmit={handleLogin} className='flex flex-col mt-8 w-full px-8'>
           <div className='flex flex-col gap-3'>
             <div className='flex flex-col gap-1'>
               <label className='pl-1 text-sm'>Email:</label>
@@ -49,6 +70,8 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
                   type="email"
                   placeholder='Seu email aqui...'
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -58,10 +81,12 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
                 <FaKey />
                 <input
                   className={`${inputStyle}`}
-                  type="senha"
+                  type="password"
                   placeholder='Sua senha aqui...'
                   maxLength={8}
                   required
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                 />
               </div>
             </div>

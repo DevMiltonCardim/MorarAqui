@@ -7,7 +7,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Anunciar from './Pages/Anunciar'
 import Cadastro from './Pages/Cadastro'
-import HomeUsuarioLogado from './Pages/HomeUsuarioLogado'
+import ImovelGestaoCard from './Pages/PainelAnunciante/ImovelGestaoCard'
+import PainelAnunciante from './Pages/PainelAnunciante'
 
 function AppRoutes() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -31,10 +32,9 @@ function AppRoutes() {
           path='anunciar'
           element={isLoggedIn ? <Anunciar /> : <Navigate to={"/login"} replace />}
         />
-
         <Route
-          path='/homeUsuarioLogado'
-          element={isLoggedIn ? <HomeUsuarioLogado /> : <Navigate to={"/login"} replace />}
+          path='painel'
+          element={isLoggedIn ? <PainelAnunciante /> : <Navigate to="/login" />}
         />
       </Route>
 
@@ -47,7 +47,11 @@ function AppRoutes() {
         path='/cadastro'
         element={isLoggedIn ? <Navigate to="/" replace /> : <Cadastro setIsLoggedIn={setIsLoggedIn} />}
       />
-      
+
+      // Tela 404
+      <Route
+        path='*'
+      />
     </Routes>
   )
 }

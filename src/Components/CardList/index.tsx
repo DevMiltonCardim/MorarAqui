@@ -13,6 +13,8 @@ export const CardList = ({ propriedades }: CardListProps) => {
       {propriedades.map(imovel => (
         <CardPropriets
           key={imovel.id}
+          userId={imovel.userId}
+          ativo={imovel.ativo}
           id={imovel.id}
           capa={imovel.capa}
           descricao={imovel.descricao}
