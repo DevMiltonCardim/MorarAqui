@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Anunciar from './Pages/Anunciar'
 import Cadastro from './Pages/Cadastro'
+import HomeUsuarioLogado from './Pages/HomeUsuarioLogado'
 
 function AppRoutes() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -21,20 +22,32 @@ function AppRoutes() {
     <Routes>
       <Route path='/' element={<Layout isLoggedIn={isLoggedIn} />}>
         <Route index element={<Home />} />
-        <Route path='detalhes/:id' element={<PaginaProduto />} />
+        <Route 
+          path='detalhes/:id' 
+          element={<PaginaProduto />} 
+        />
+
         <Route
           path='anunciar'
           element={isLoggedIn ? <Anunciar /> : <Navigate to={"/login"} replace />}
         />
+
+        <Route
+          path='/homeUsuarioLogado'
+          element={isLoggedIn ? <HomeUsuarioLogado /> : <Navigate to={"/login"} replace />}
+        />
       </Route>
+
       <Route
         path='/login'
         element={isLoggedIn ? <Navigate to="/" replace /> : <Login setIsLoggedIn={setIsLoggedIn} />}
       />
+      
       <Route
         path='/cadastro'
         element={isLoggedIn ? <Navigate to="/" replace /> : <Cadastro setIsLoggedIn={setIsLoggedIn} />}
       />
+      
     </Routes>
   )
 }

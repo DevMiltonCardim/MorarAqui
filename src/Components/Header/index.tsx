@@ -34,8 +34,6 @@ const Header = ({ isLoggedIn }: isLoggedHeaderProps) => {
             <button onClick={handleAnunciarClick} className='text-[16px] hover:text-[#D87C50]'>Anunciar Imóvel</button>
           </div>
         </div>
-
-
       </nav>
     </header>
   )

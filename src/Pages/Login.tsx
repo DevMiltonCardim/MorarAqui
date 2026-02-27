@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../../src/assets/Logo-empresa.png'
 import type { Dispatch, SetStateAction } from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
-import { FaLock } from 'react-icons/fa6';
+
 import { CgArrowLongLeft } from "react-icons/cg";
 import { FaKey } from 'react-icons/fa';
 
