@@ -1,12 +1,23 @@
 import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../../assets/Logo-empresa.png'
+import type { Dispatch, SetStateAction } from 'react';
+import { BiLogOut } from 'react-icons/bi';
 
 interface isLoggedHeaderProps {
   isLoggedIn: boolean;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
 
-const Header = ({ isLoggedIn }: isLoggedHeaderProps) => {
+const Header = ({ isLoggedIn, setIsLoggedIn }: isLoggedHeaderProps) => {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('@MorarAqui:token');
+    localStorage.removeItem('@MorarAqui:userId');
+
+    setIsLoggedIn(false);
+    navigate('/login');
+  }
 
   const handleAnunciarClick = () => {
     if (isLoggedIn) {
@@ -28,13 +39,22 @@ const Header = ({ isLoggedIn }: isLoggedHeaderProps) => {
             </h1>
           </div>
         </Link>
-
-        <div className='flex items-center gap-4 pr-2 border-2 border-[#D87C50] rounded-lg px-3 py-1'>
-          <div className='flex flex-col'>
-            <button onClick={handleAnunciarClick} className='text-[16px] hover:text-[#D87C50]'>Anunciar Imóvel</button>
+        <div className='flex items-center gap-4 md:gap-6'>
+          {isLoggedIn && (
+            <button
+              className='flex flex-col justify-center items-center'
+              onClick={handleLogout}
+            >
+              <BiLogOut size={22} className='mr-2' />
+              <span className='text-sm text-gray-400'>Logout</span>
+            </button>
+          )}
+          <div className='flex items-center gap-4 pr-2 border-2 border-[#D87C50] rounded-lg px-3 py-1'>
+            <div className='flex flex-col'>
+              <button onClick={handleAnunciarClick} className='text-[16px] hover:text-[#D87C50]'>Anunciar Imóvel</button>
+            </div>
           </div>
         </div>
-
 
       </nav>
     </header>

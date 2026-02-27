@@ -8,6 +8,8 @@ interface Props {
 }
 
 export const DetalhesImovelContainer = ({ imovel }: Props) => {
+  const whatsappLink = `https://wa.me/55${imovel.usuario.whatsapp}`;
+
   const SubtituloStyles = "text-2xl font-semibold font-[Playfair-Display]"
   const informacoesImovelStyles = "flex items-center pl-2 bg-gray-200 rounded-lg gap-3"
 
@@ -18,7 +20,7 @@ export const DetalhesImovelContainer = ({ imovel }: Props) => {
           {imovel.negocio}
         </div>
         <div className="py-1 px-2 bg-[#D87C50] text-white text-sm rounded-2xl">
-          Disponivel
+          {imovel.ativo === true ? 'Disponivel' : 'Indisponivel'}
         </div>
       </div>
       <div className="flex flex-col gap-2 pb-5">

@@ -4,6 +4,7 @@ import { FilterSelect } from "./FilterSelect";
 import { PriceFilter } from "./PriceFilter";
 import { VscChromeClose } from "react-icons/vsc";
 import type { IFiltrosAvancados } from "../../../types/propriedade";
+import { useCidades } from "../../../hooks/useCidades";
 
 interface MaisFiltersProps {
   filtros: IFiltrosAvancados;
@@ -13,6 +14,7 @@ interface MaisFiltersProps {
 const MaisFilters = ({ filtros, setFiltros }: MaisFiltersProps) => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const { cidades, loading } = useCidades();
 
   const updateFiltro = (campo: keyof IFiltrosAvancados, valor: any) => {
     setFiltros(prev => ({
@@ -40,7 +42,11 @@ const MaisFilters = ({ filtros, setFiltros }: MaisFiltersProps) => {
           <div className="col-span-2">
             <FilterSelect
               label="Cidade"
-              options={["Todas", "Ibirataia", "Ipiaú"]}
+              options={
+                loading
+                  ? ["Carregando..."]
+                  : ["Todas", ...cidades.map(c => c.nome)]
+              }
               value={filtros.cidade}
               onChange={(novoValor) => updateFiltro('cidade', novoValor)}
             />

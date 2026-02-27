@@ -1,3 +1,9 @@
+export interface IFoto {
+  id: number;
+  url: string;
+  ordem: number;
+}
+
 export interface IPropriedade {
   id: number;
   ativo: boolean;
@@ -5,7 +11,7 @@ export interface IPropriedade {
   titulo: string;
   descricao: string;
   capa: string;
-  imagens?: string[];
+  imagens?: IFoto[];
   preco: number | string;
   pontoReferencia?: string;
   nomeBairro: string;
@@ -16,6 +22,10 @@ export interface IPropriedade {
   vagas?: number;
   tipo: 'casa' | 'apartamento' | 'terreno' | 'comercial' | 'cobertura';
   negocio: 'venda' | 'aluguel';
+  usuario: {
+    nome: string;
+    whatsapp: string;
+  }
 }
 
 // Feito para se utilizar nos componentes do Mais Filtros!!!

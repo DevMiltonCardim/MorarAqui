@@ -3,10 +3,26 @@ import { FormSelect } from "../Components/FormSelect";
 import { PriceInput } from "../Components/PriceInput";
 import { cidadesRegiao } from "../data/municipios";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { api } from "../services/api";
+
+interface IFormData {
+  titulo: string;
+  tipo: string;
+  negocio: string;
+  preco: number;
+  nomeCidade: string;
+  nomeBairro: string;
+  area: number;
+  banheiros: number;
+  quartos: number;
+  vagas: number;
+  descricao: string;
+  fotos: File[]; // explicitly an array of File objects
+}
 
 const Anunciar = () => {
   const [passo, setPasso] = useState(1);
-  const [dadosAnuncio, setDadosAnuncio] = useState({
+  const [formData, setFormData] = useState<IFormData>({
     titulo: '',
     tipo: '',
     negocio: '',
@@ -16,21 +32,49 @@ const Anunciar = () => {
     area: 0,
     banheiros: 0,
     quartos: 0,
+    vagas: 0,
     descricao: '',
     fotos: []
   });
 
   const proximoPasso = () => {
-    if (!dadosAnuncio.titulo || !dadosAnuncio.negocio || !dadosAnuncio.tipo || !dadosAnuncio.nomeCidade || !dadosAnuncio.preco) {
+    if (!formData.titulo || !formData.negocio || !formData.tipo || !formData.nomeCidade || !formData.preco) {
       alert("Por favor, preencha os campos principais");
       return;
     }
     setPasso(2);
   }
 
-  const handleAnunciarSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Dados prontos para enviar:", dadosAnuncio);
+  const handleCadastrarImovel = async () => {
+    const data = new FormData();
+
+    data.append('titulo', formData.titulo);
+    data.append('descricao', formData.descricao);
+    data.append('tipo', formData.tipo.toLowerCase());
+    data.append('negocio', formData.negocio.toLowerCase());
+    data.append('preco', String(formData.preco));
+    data.append('nomeCidade', formData.nomeCidade);
+    data.append('nomeBairro', formData.nomeBairro);
+    data.append('area', String(formData.area));
+    data.append('quartos', String(formData.quartos));
+    data.append('banheiros', String(formData.banheiros));
+    data.append('vagas', String(formData.vagas));
+    data.append('userId', String(localStorage.getItem('@MorarAqui:userId')));
+
+    formData.fotos.forEach((file) => {
+      data.append('fotos', file);
+    });
+
+    try {
+      await api.post('/imoveis/cadastrar', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert("Imóvel cadastrado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao enviar:", error);
+    }
   }
 
   const inputsTextStyle = "py-1.5 pl-2 border border-gray-500 rounded-xl shadow-md"
@@ -49,8 +93,8 @@ const Anunciar = () => {
               placeholder="Adicione o titulo do imóvel..."
               required
               className={`${inputsTextStyle}`}
-              value={dadosAnuncio.titulo}
-              onChange={(e) => setDadosAnuncio({ ...dadosAnuncio, titulo: e.target.value })}
+              value={formData.titulo}
+              onChange={(e) => setFormData({ ...formData, titulo: e.target.value })}
             />
           </div>
           <div className="flex flex-col mt-3">
@@ -60,8 +104,8 @@ const Anunciar = () => {
               placeholder="Adicione a descrição do seu imóvel"
               required
               className={`${inputsTextStyle}`}
-              value={dadosAnuncio.descricao}
-              onChange={(e) => setDadosAnuncio({ ...dadosAnuncio, descricao: e.target.value })}
+              value={formData.descricao}
+              onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
             />
           </div>
           <div className="flex gap-2 w-full mt-3">
@@ -70,7 +114,7 @@ const Anunciar = () => {
                 label="Tipo de Imóvel"
                 placeholder="Selecione..."
                 options={['Casa', 'Apartamento', 'Kitnet', 'Sobrado']}
-                onSelect={(val: string) => setDadosAnuncio({ ...dadosAnuncio, tipo: val })}
+                onSelect={(val: string) => setFormData({ ...formData, tipo: val })}
               />
             </div>
             <div className="w-1/2">
@@ -78,15 +122,15 @@ const Anunciar = () => {
                 label="Finalidade"
                 placeholder="Selecione..."
                 options={['Venda', 'Aluguel']}
-                onSelect={(val: string) => setDadosAnuncio({ ...dadosAnuncio, negocio: val })}
+                onSelect={(val: string) => setFormData({ ...formData, negocio: val })}
               />
             </div>
           </div>
           <div className="mt-3">
             <PriceInput
               label="Preço do Imóvel"
-              value={dadosAnuncio.preco}
-              onChange={(val: number) => setDadosAnuncio({ ...dadosAnuncio, preco: val })}
+              value={formData.preco}
+              onChange={(val: number) => setFormData({ ...formData, preco: val })}
             />
           </div>
           <div className="flex gap-2 mt-4">
@@ -95,7 +139,7 @@ const Anunciar = () => {
                 label="Cidade"
                 placeholder="Selecione a cidade"
                 options={cidadesRegiao}
-                onSelect={(val) => setDadosAnuncio({ ...dadosAnuncio, nomeCidade: val })}
+                onSelect={(val) => setFormData({ ...formData, nomeCidade: val })}
               />
             </div>
             <div className="flex flex-col gap-2 w-1/2">
@@ -104,8 +148,8 @@ const Anunciar = () => {
                 type="text"
                 placeholder="Ex: Centro"
                 className="py-2.5 pl-4 border border-gray-300 rounded-lg shadow-md"
-                value={dadosAnuncio.nomeBairro}
-                onChange={(e) => setDadosAnuncio({ ...dadosAnuncio, nomeBairro: e.target.value })}
+                value={formData.nomeBairro}
+                onChange={(e) => setFormData({ ...formData, nomeBairro: e.target.value })}
               />
             </div>
           </div>
@@ -125,7 +169,7 @@ const Anunciar = () => {
         <div className="flex flex-col gap-6 animate-in slide-in-from-right duration-500">
           <h2 className="text-2xl font-bold text-center mt-8">Detalhes do imóvel</h2>
 
-          {dadosAnuncio.tipo !== 'Terreno' ? (
+          {formData.tipo.toLowerCase() !== 'terreno' ? (
             <div>
 
               <div className="flex gap-4">
@@ -134,7 +178,7 @@ const Anunciar = () => {
                     label="Quartos"
                     placeholder="Selecione..."
                     options={['1', '2', '3+']}
-                    onSelect={(v) => { }}
+                    onSelect={(val) => setFormData({ ...formData, quartos: Number(val) })}
                   />
                 </div>
                 <div className="w-1/2">
@@ -142,16 +186,16 @@ const Anunciar = () => {
                     label="Banheiros"
                     placeholder="Selecione..."
                     options={['1', '2', '3+']}
-                    onSelect={(v) => { }}
+                    onSelect={(val) => setFormData({ ...formData, banheiros: Number(val) })}
                   />
                 </div>
               </div>
               <div className="mt-4">
                 <FormSelect
-                  label="Vagas"
+                  label="Vagas de Garagem"
                   placeholder="Selecione..."
                   options={['1', '2', '3+']}
-                  onSelect={(v) => { }}
+                  onSelect={(val) => setFormData({ ...formData, vagas: Number(val) })}
                 />
               </div>
             </div>
@@ -164,11 +208,8 @@ const Anunciar = () => {
                 type="number"
                 placeholder="Ex: 150"
                 className="w-full outline-none text-gray-900 placeholder:text-gray-400 bg-transparent font-medium"
-                value={dadosAnuncio.area}
-                onChange={(e) => {
-                  const val = e.target.value === '' ? 0 : Number(e.target.value)
-                  setDadosAnuncio({ ...dadosAnuncio, area: val });
-                }}
+                value={formData.area}
+                onChange={(e) => setFormData({ ...formData, area: Number(e.target.value) })}
               />
               <span className="text-gray-500 font-bold ml-2 border-l pl-2 border-gray-200">
                 m²
@@ -184,17 +225,15 @@ const Anunciar = () => {
                 accept="image/*"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={(e) => {
-                  console.log(e.target.files);
+                  if (e.target.files) {
+                    setFormData({ ...formData, fotos: Array.from(e.target.files) });
+                  }
                 }}
               />
 
-              <div className="flex flex-col items-center gap-2">
-                <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                </svg>
-                <p className="text-gray-600 font-medium">Clique ou arraste as fotos aqui</p>
-                <p className="text-xs text-gray-400">PNG, JPG, ou JPEG (Max. 5MB cada)</p>
-              </div>
+              <p className="text-gray-600 font-medium">
+                {formData.fotos.length > 0 ? `${formData.fotos.length} arquivos selecionados` : 'Clique ou arraste as fotos aqui'}
+              </p>
             </div>
           </div>
 
@@ -206,7 +245,10 @@ const Anunciar = () => {
               <FaArrowLeft />
               Voltar
             </button>
-            <button className="flex items-center justify-center gap-2 w-1/2 bg-[#D87C50] text-white py-3 rounded-xl font-bold hover:bg[#b5653f] transition-colors">
+            <button
+              className="flex items-center justify-center gap-2 w-1/2 bg-[#D87C50] text-white py-3 rounded-xl font-bold hover:bg[#b5653f] transition-colors"
+              onClick={() => handleCadastrarImovel}
+            >
               Avançar
               <FaArrowRight />
             </button>

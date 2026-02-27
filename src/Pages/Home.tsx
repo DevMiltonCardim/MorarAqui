@@ -1,15 +1,18 @@
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { CardList } from "../Components/CardList"
 import Filters from "../Components/Filters"
 import { HeroSection } from "../Components/HeroSection"
 import { OrdenarLista } from "../Components/OrdenarLista"
-import { listaImoveis } from "../data/imoveis"
-import type { IFiltrosAvancados } from "../types/propriedade"
+import type { IFiltrosAvancados, IPropriedade } from "../types/propriedade"
+import { api } from "../services/api"
+import { useCidades } from "../hooks/useCidades"
 
 const Home = () => {
+  const [imoveis, setImoveis] = useState<IPropriedade[]>([]);
   const [filterNegocio, setFilterNegocio] = useState('todos');
   const [orderType, setOrderType] = useState('recentes');
-
+  const { cidades } = useCidades();
+  
   const [filtrosAvancados, setFiltrosAvancados] = useState<IFiltrosAvancados>({
     cidade: 'Todas',
     tipoDeImovel: 'Todos',
@@ -20,40 +23,45 @@ const Home = () => {
     maxPrice: '',
   })
 
-  const resultadoFiltrado = listaImoveis.filter((imovel) => {
-    const matchNegocio = filterNegocio.toLowerCase() === 'todos' || imovel.negocio.toLowerCase() === filterNegocio.toLowerCase();
+  useEffect(() => {
+    const cidadeSelecionada = cidades.find(c => c.nome === filtrosAvancados.cidade);
+    const params: any = {};
 
-    const matchCidade = filtrosAvancados.cidade === 'Todas' || imovel.nomeCidade.includes(filtrosAvancados.cidade);
-    const matchTipo = filtrosAvancados.tipoDeImovel === 'Todos' || imovel.tipo.toLowerCase() === filtrosAvancados.tipoDeImovel.toLowerCase();
+    if (cidadeSelecionada && filtrosAvancados.cidade !== 'Todas') {
+      params.cidadeId = cidadeSelecionada.id;
+    }
 
-    const matchQuartos = filtrosAvancados.quartos === 0 || (imovel.quartos ?? 0) >= filtrosAvancados.quartos;
-    const matchBanheiros = filtrosAvancados.banheiros === 0 || (imovel.banheiros ?? 0) >= filtrosAvancados.banheiros;
-    const matchVagas = filtrosAvancados.vagas === 0 || (imovel.vagas ?? 0) >= filtrosAvancados.vagas;
+    if (filterNegocio !== 'todos') params.negocio = filterNegocio;
+    if (filtrosAvancados.tipoDeImovel !== 'Todos') params.tipo = filtrosAvancados.tipoDeImovel;
+    if (filtrosAvancados.minPrice) params.minPreco = filtrosAvancados.minPrice;
+    if (filtrosAvancados.maxPrice) params.maxPreco = filtrosAvancados.maxPrice;
+    if (filtrosAvancados.quartos > 0) params.quartos = filtrosAvancados.quartos;
+    if (filtrosAvancados.banheiros > 0) params.banheiros = filtrosAvancados.banheiros;
+    if (filtrosAvancados.vagas > 0) params.vagas = filtrosAvancados.vagas;
 
-    const converterParaNumero = (valor: string | number) => {
-      if (typeof valor === 'number') return valor; // Se já for número, retorna ele
-      if (!valor) return 0;
-      // Se for string, limpa e converte
-      return parseFloat(valor.replace(/\./g, '').replace(',', '.'));
+    api.get('/imoveis/busca', { params })
+      .then(res => setImoveis(res.data))
+      .catch(err => console.error("Erro ao buscar da API:", err));
+  }, [filterNegocio, filtrosAvancados, cidades]);
+
+  const imoveisExibidos = useMemo(() => {
+    const lista = [...imoveis];
+
+    const parsePreco = (preco: string | number): number => {
+      if (typeof preco === 'number') return preco;
+      return parseFloat(preco.replace(/[^\d,]/g, '').replace(',', '.'));
     };
+    
+    return lista.sort((a, b) => {
+      const precoA = parsePreco(a.preco);
+      const precoB = parsePreco(b.preco);
 
-    const precoLimpo = converterParaNumero(imovel.preco);
-    const min = filtrosAvancados.minPrice ? converterParaNumero(filtrosAvancados.minPrice) : 0;
-    const max = filtrosAvancados.maxPrice ? converterParaNumero(filtrosAvancados.maxPrice) : Infinity;
-    const matchPreco = precoLimpo >= min && precoLimpo <= max;
-
-    return matchNegocio && matchCidade && matchTipo && matchQuartos && matchBanheiros && matchVagas && matchPreco;
-  })
-
-  const imoveisExibidos = [...resultadoFiltrado].sort((a, b) => {
-    const precoA = typeof a.preco === 'number' ? a.preco : parseFloat(a.preco.replace(/\D/g, '')) / 100;
-    const precoB = typeof b.preco === 'number' ? b.preco : parseFloat(b.preco.replace(/\D/g, '')) / 100;
-
-    if (orderType === 'menor-preco') return precoA - precoB;
-    if (orderType === 'maior-preco') return precoB - precoA;
-    if (orderType === 'maior-area') return (b.area ?? 0) - (a.area ?? 0);
-    return b.id - a.id;
-  })
+      if (orderType === 'menor-preco') return precoA - precoB;
+      if (orderType === 'maior-preco') return precoB - precoA;
+      if (orderType === 'maior-area') return (b.area ?? 0) - (a.area ?? 0);
+      return b.id - a.id;
+    });
+  }, [imoveis, orderType]);
 
   return (
     <main className="bg-gray-50">

@@ -1,18 +1,17 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import Logo from '../../src/assets/Logo-empresa.png'
+import Logo from '../../assets/Logo-empresa.png'
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa6';
 import { CgArrowLongLeft } from "react-icons/cg";
 import { FaKey } from 'react-icons/fa';
-import { api } from '../services/api';
+import { api } from '../../services/api';
 
 interface LoggedProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
 }
 
 const Login = ({ setIsLoggedIn }: LoggedProps) => {
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');

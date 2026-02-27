@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
-import { listaImoveis } from "../../data/imoveis";
 import type { IPropriedade } from "../../types/propriedade";
 import ImovelGestaoCard from "./ImovelGestaoCard";
 import { DashboardHeader } from "./DashboardHeader";
 import { api } from "../../services/api";
 
 const PainelAnunciante = () => {
-  const [meusImoveis, setMeusImoveis] = useState<IPropriedade[]>(
-    listaImoveis.filter(imovel => imovel.userId === 1)
-  );
+  const [meusImoveis, setMeusImoveis] = useState<IPropriedade[]>([]);
 
   const [filtroStatus, setFiltroStatus] = useState<'todos' | 'ativos' | 'pausados'>('todos');
 
@@ -23,7 +20,8 @@ const PainelAnunciante = () => {
     };
 
     carregarMeusImoveis();
-  }, [])
+  }, []);
+  
   const imveisExibidos = meusImoveis.filter(imovel => {
     if (filtroStatus === 'ativos') return imovel.ativo === true;
     if (filtroStatus === 'pausados') return imovel.ativo === false;

@@ -1,38 +1,35 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import Layout from './Layout'
 import Home from './Pages/Home'
 import PaginaProduto from './Pages/PaginaProduto'
-import Login from './Pages/Login'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import Login from './Pages/FormulariosAutenticacao/Login'
+import Cadastro from './Pages/FormulariosAutenticacao/Cadastro'
 import Anunciar from './Pages/Anunciar'
-import Cadastro from './Pages/Cadastro'
-import ImovelGestaoCard from './Pages/PainelAnunciante/ImovelGestaoCard'
 import PainelAnunciante from './Pages/PainelAnunciante'
 
 function AppRoutes() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const navigate = useNavigate();
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    navigate("/anunciar");
-  }
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('@MorarAqui:token'));
 
   return (
     <Routes>
-      <Route path='/' element={<Layout isLoggedIn={isLoggedIn} />}>
+      <Route path='/' element={<Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}>
         <Route index element={<Home />} />
         <Route path='detalhes/:id' element={<PaginaProduto />} />
+
+        {/* Rotas Protegidas */}
         <Route
           path='anunciar'
-          element={isLoggedIn ? <Anunciar /> : <Navigate to={"/login"} replace />}
+          element={isLoggedIn ? <Anunciar /> : <Navigate to={"/cadastro"} replace />}
         />
         <Route
           path='painel'
           element={isLoggedIn ? <PainelAnunciante /> : <Navigate to="/login" />}
         />
+
       </Route>
+
+      {/* Rotas de Autenticação */}
       <Route
         path='/login'
         element={isLoggedIn ? <Navigate to="/" replace /> : <Login setIsLoggedIn={setIsLoggedIn} />}
