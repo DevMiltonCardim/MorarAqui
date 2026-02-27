@@ -3,14 +3,9 @@ import Logo from '../../assets/Logo-empresa.png'
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
 import { FaLock } from 'react-icons/fa6';
-import { CgArrowLongLeft } from "react-icons/cg";
-import { FaKey } from 'react-icons/fa';
-import { CgArrowLongRight } from "react-icons/cg";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { api } from '../../services/api';
-
-
 
 interface LoggedProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;

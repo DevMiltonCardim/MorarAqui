@@ -16,8 +16,6 @@ function AppRoutes() {
       <Route path='/' element={<Layout isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}>
         <Route index element={<Home />} />
         <Route path='detalhes/:id' element={<PaginaProduto />} />
-
-        {/* Rotas Protegidas */}
         <Route
           path='anunciar'
           element={isLoggedIn ? <Anunciar /> : <Navigate to={"/cadastro"} replace />}
@@ -28,12 +26,11 @@ function AppRoutes() {
         />
 
       </Route>
-
-      {/* Rotas de Autenticação */}
       <Route
         path='/login'
         element={isLoggedIn ? <Navigate to="/" replace /> : <Login setIsLoggedIn={setIsLoggedIn} />}
       />
+      
       <Route
         path='/cadastro'
         element={isLoggedIn ? <Navigate to="/" replace /> : <Cadastro setIsLoggedIn={setIsLoggedIn} />}
