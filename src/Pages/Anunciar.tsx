@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FormSelect } from "../Components/FormSelect";
 import { PriceInput } from "../Components/PriceInput";
-import { cidadesRegiao } from "../data/municipios";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { api } from "../services/api";
+import { useCidades } from "../hooks/useCidades";
 
 interface IFormData {
   titulo: string;
@@ -21,7 +21,11 @@ interface IFormData {
 }
 
 const Anunciar = () => {
+  const { cidades } = useCidades();
   const [passo, setPasso] = useState(1);
+  
+  const nomesDasCidades = cidades.map(c => c.nome);
+
   const [formData, setFormData] = useState<IFormData>({
     titulo: '',
     tipo: '',
@@ -138,7 +142,7 @@ const Anunciar = () => {
               <FormSelect
                 label="Cidade"
                 placeholder="Selecione a cidade"
-                options={cidadesRegiao}
+                options={nomesDasCidades}
                 onSelect={(val) => setFormData({ ...formData, nomeCidade: val })}
               />
             </div>
@@ -247,9 +251,9 @@ const Anunciar = () => {
             </button>
             <button
               className="flex items-center justify-center gap-2 w-1/2 bg-[#D87C50] text-white py-3 rounded-xl font-bold hover:bg[#b5653f] transition-colors"
-              onClick={() => handleCadastrarImovel}
+              onClick={() => handleCadastrarImovel()}
             >
-              Avançar
+              Finalizar
               <FaArrowRight />
             </button>
           </div>
