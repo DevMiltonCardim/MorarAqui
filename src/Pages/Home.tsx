@@ -10,6 +10,7 @@ import { useCidades } from "../hooks/useCidades"
 const Home = () => {
   const [imoveis, setImoveis] = useState<IPropriedade[]>([]);
   const [filterNegocio, setFilterNegocio] = useState('todos');
+  console.log("Filtro de negócio:", filterNegocio);
   const [orderType, setOrderType] = useState('recentes');
   const { cidades } = useCidades();
   
@@ -37,6 +38,7 @@ const Home = () => {
     }
 
     if (filterNegocio !== 'todos') {
+      console.log("Filtro de negócio oa:", filterNegocio);
       params.finalidade = filterNegocio.toUpperCase(); 
     }
 
@@ -57,7 +59,7 @@ const Home = () => {
 
     api.get(endpoint, { params })
       .then(res => {
-        const listaDeImoveis = res.data.content || []; 
+        const listaDeImoveis = res.data.content || res.data || []; 
         setImoveis(listaDeImoveis);
     })
     .catch(err => {
