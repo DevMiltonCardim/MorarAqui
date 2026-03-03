@@ -22,18 +22,20 @@ const Cadastro = ({ setIsLoggedIn }: LoggedProps) => {
 
   const handleCadastro = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await api.post('/usuarios/cadastrar', {
-        nome,
-        email,
-        whatsapp,
-        senha
-      });
 
+    const dadosUsuario = {
+      nome: nome,
+      email: email,
+      senha: senha,
+      whatsapp: whatsapp
+    }
+
+    try {
+      const response = await api.post('/usuarios/cadastrar', dadosUsuario);
       alert('Cadastro realizado com sucesso! Agora faça seu login.');
       navigate('/login');
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error("Erro detalhado do backend", error.response?.data);
       alert('Erro ao cadastrar. Verifique os dados ou tente novamente.');
     }
   };

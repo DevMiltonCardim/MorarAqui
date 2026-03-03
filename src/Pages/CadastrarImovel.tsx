@@ -4,6 +4,7 @@ import { PriceInput } from "../Components/PriceInput";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { api } from "../services/api";
 import { useCidades } from "../hooks/useCidades";
+import { useNavigate } from "react-router-dom";
 
 interface IFormData {
   titulo: string;
@@ -20,9 +21,11 @@ interface IFormData {
   fotos: File[]; // explicitly an array of File objects
 }
 
-const Anunciar = () => {
+const CadastrarImovel = () => {
   const { cidades } = useCidades();
   const [passo, setPasso] = useState(1);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const navigate = useNavigate();
   
   const nomesDasCidades = cidades.map(c => c.nome);
 
@@ -41,6 +44,18 @@ const Anunciar = () => {
     fotos: []
   });
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setFormData({ ...formData, fotos: filesArray });
+
+      const newPreviews = filesArray.map(file => URL.createObjectURL(file));
+      previews.forEach(url => URL.revokeObjectURL(url));
+
+      setPreviews(newPreviews);
+    }
+  }
+
   const proximoPasso = () => {
     if (!formData.titulo || !formData.negocio || !formData.tipo || !formData.nomeCidade || !formData.preco) {
       alert("Por favor, preencha os campos principais");
@@ -50,34 +65,36 @@ const Anunciar = () => {
   }
 
   const handleCadastrarImovel = async () => {
-    const data = new FormData();
+    const userId = localStorage.getItem('@MorarAqui:userId');
 
-    data.append('titulo', formData.titulo);
-    data.append('descricao', formData.descricao);
-    data.append('tipo', formData.tipo.toLowerCase());
-    data.append('negocio', formData.negocio.toLowerCase());
-    data.append('preco', String(formData.preco));
-    data.append('nomeCidade', formData.nomeCidade);
-    data.append('nomeBairro', formData.nomeBairro);
-    data.append('area', String(formData.area));
-    data.append('quartos', String(formData.quartos));
-    data.append('banheiros', String(formData.banheiros));
-    data.append('vagas', String(formData.vagas));
-    data.append('userId', String(localStorage.getItem('@MorarAqui:userId')));
+    if (!userId) {
+      alert("Usuário não identificado.");
+      return;
+    }
 
-    formData.fotos.forEach((file) => {
-      data.append('fotos', file);
-    });
+    const imovelDados = {
+      titulo: formData.titulo,
+      descricao: formData.descricao,
+      tipo: formData.tipo.toLowerCase(),
+      negocio: formData.negocio.toLowerCase(),
+      preco: formData.preco,
+      nomeCidade: formData.nomeCidade,
+      nomeBairro: formData.nomeBairro,
+      area: formData.area,
+      quartos: formData.quartos,
+      banheiros: formData.banheiros,
+      vagas: formData.vagas,
+      usuarioId: Number(userId),
+    }
 
     try {
-      await api.post('/imoveis/cadastrar', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      await api.post('/imoveis/cadastrar', imovelDados);
+
       alert("Imóvel cadastrado com sucesso!");
+      navigate('/painel')
     } catch (error) {
       console.error("Erro ao enviar:", error);
+      alert("Erro ao cadastrar dados básicos.");
     }
   }
 
@@ -220,26 +237,6 @@ const Anunciar = () => {
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-2 mt-6">
-            <label className="pl-1 text-sm font-medium text-gray-700">Fotos do Imóvel</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 hover:border-[#D87C50] transition-all cursor-pointer relative">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                onChange={(e) => {
-                  if (e.target.files) {
-                    setFormData({ ...formData, fotos: Array.from(e.target.files) });
-                  }
-                }}
-              />
-
-              <p className="text-gray-600 font-medium">
-                {formData.fotos.length > 0 ? `${formData.fotos.length} arquivos selecionados` : 'Clique ou arraste as fotos aqui'}
-              </p>
-            </div>
-          </div>
 
           <div className="flex items-center gap-3">
             <button
@@ -250,7 +247,7 @@ const Anunciar = () => {
               Voltar
             </button>
             <button
-              className="flex items-center justify-center gap-2 w-1/2 bg-[#D87C50] text-white py-3 rounded-xl font-bold hover:bg[#b5653f] transition-colors"
+              className="flex items-center justify-center gap-2 w-1/2 bg-[#D87C50] text-white py-3 rounded-xl font-bold hover:bg[#ad603c] transition-colors"
               onClick={() => handleCadastrarImovel()}
             >
               Finalizar
@@ -263,4 +260,4 @@ const Anunciar = () => {
   )
 }
 
-export default Anunciar;
+export default CadastrarImovel;

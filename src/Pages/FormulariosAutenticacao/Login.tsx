@@ -5,7 +5,7 @@ import { MdOutlineEmail } from 'react-icons/md';
 
 import { CgArrowLongLeft } from "react-icons/cg";
 import { FaKey } from 'react-icons/fa';
-import { api } from '../../services/api';
+import { api, decodeJWT } from '../../services/api';
 
 interface LoggedProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -30,10 +30,17 @@ const Login = ({ setIsLoggedIn }: LoggedProps) => {
         '/login',
         { email, senha }
       );
-      const { token } = response.data;
+      console.log('Resposta do login:', response.data);
 
+      const { token } = response.data;
       localStorage.setItem('@MorarAqui:token', token);
-      // usa o id que vem dentro de 'usuario'
+
+      const payload = decodeJWT(token);
+      if (payload) {
+        // não entendi qual desses era realmente oque funcionava no backend
+        const idParaSalvar = payload.usuarioId || payload.id || payload.sub;
+        localStorage.setItem('@MorarAqui:userId', String(payload.usuarioId));
+      }
 
       setIsLoggedIn(true);
       navigate('/painel');

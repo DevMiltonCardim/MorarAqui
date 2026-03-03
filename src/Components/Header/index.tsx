@@ -19,11 +19,11 @@ const Header = ({ isLoggedIn, setIsLoggedIn }: isLoggedHeaderProps) => {
     navigate('/login');
   }
 
-  const handleAnunciarClick = () => {
+  const handleAnunciarImovelClick = () => {
     if (isLoggedIn) {
-      navigate("/anunciar")
+      navigate("/cadastrarImovel")
     } else {
-      navigate("/login", { state: { from: "/anunciar" } });
+      navigate("/login", { state: { from: "/cadastrarImovel" } });
     }
   }
 
@@ -40,9 +40,21 @@ const Header = ({ isLoggedIn, setIsLoggedIn }: isLoggedHeaderProps) => {
           </div>
         </Link>
 
-        <div className='flex items-center gap-4 pr-2 border-2 border-[#D87C50] rounded-lg px-3 py-1'>
-          <div className='flex flex-col'>
-            <button onClick={handleAnunciarClick} className='text-[16px] hover:text-[#D87C50]'>Anunciar Imóvel</button>
+        <div className='flex gap-4 md:gap-6'>
+          {isLoggedIn && (
+            <button
+              onClick={handleLogout}
+              className={`${isLoggedIn === true ? 'flex flex-col items-center justify-center text-gray-700' : 'hidden'}`}
+            >
+              <BiLogOut size={20} />
+              Logout
+            </button>
+          )}
+
+          <div className='flex items-center gap-4 pr-2 border-2 border-[#D87C50] rounded-lg px-3 py-1'>
+            <div className='flex flex-col'>
+              <button onClick={handleAnunciarImovelClick} className='text-[16px] hover:text-[#D87C50]'>Anunciar Imóvel</button>
+            </div>
           </div>
         </div>
 

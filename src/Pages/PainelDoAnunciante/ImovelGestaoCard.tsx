@@ -14,6 +14,8 @@ interface ImovelGestaoCardProps {
 const ImovelGestaoCard = ({ imovel, onEdit, onDelete, onToggleStatus }: ImovelGestaoCardProps) => {
   const styleInformacaoImovel = 'flex items-center gap-1 text-gray-500 text-sm'
 
+  const isAtivo = imovel.ativo;
+
   return (
     <section
       className={`
@@ -24,14 +26,15 @@ const ImovelGestaoCard = ({ imovel, onEdit, onDelete, onToggleStatus }: ImovelGe
         <img
           src={imovel.capa}
           alt={imovel.titulo}
+          className="w-full h-full object-cover"
         />
       </div>
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-0.5">
           <div className="flex gap-2">
-            <h3 className="font-semibold ">Apartamento Jardins</h3>
+            <h3 className="font-semibold ">{imovel.titulo}</h3>
             <div className={`flex items-center justify-center px-2 py-1 rounded-lg text-[12px] font-medium ${imovel.ativo === false ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-600'}`}>
-              {imovel.ativo ? 'PAUSADO' : 'ATIVO'}
+              {isAtivo ? 'ATIVO' : 'PAUSADO'}
             </div>
           </div>
           <div className="flex items-center gap-1">
@@ -48,7 +51,7 @@ const ImovelGestaoCard = ({ imovel, onEdit, onDelete, onToggleStatus }: ImovelGe
         </div>
         <div className="flex flex-col">
           <h3 className="font-bold">
-            R$ {imovel.preco}
+            R$ {imovel.preco.toLocaleString('pt-BR')}
           </h3>
           <p className="text-xs text-gray-500">
             {imovel.negocio === 'venda' ? 'Total' : '/mês'}
@@ -58,7 +61,7 @@ const ImovelGestaoCard = ({ imovel, onEdit, onDelete, onToggleStatus }: ImovelGe
               className="border-2 border-gray-700 rounded-lg p-2"
               onClick={() => onToggleStatus(imovel.id)}
             >
-              {imovel.ativo ? <IoPlay /> : <IoPause />}
+              {isAtivo ? <IoPause /> : <IoPlay />}
             </button>
             <button 
               className="border-2 border-gray-700 rounded-lg p-2"

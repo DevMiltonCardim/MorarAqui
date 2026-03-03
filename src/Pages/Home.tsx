@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { CardList } from "../Components/CardList"
-import Filters from "../Components/Filters"
+import Filters from "../Components/Filtros"
 import { HeroSection } from "../Components/HeroSection"
 import { OrdenarLista } from "../Components/OrdenarLista"
 import type { IFiltrosAvancados, IPropriedade } from "../types/propriedade"

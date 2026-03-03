@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { FaChevronDown, FaSliders } from "react-icons/fa6"
-import { FilterSelect } from "./FilterSelect";
-import { PriceFilter } from "./PriceFilter";
+import { FilterSelect } from "./FiltroSelect";
+import { PriceFilter } from "./PrecoFilter";
 import { VscChromeClose } from "react-icons/vsc";
 import type { IFiltrosAvancados } from "../../../types/propriedade";
 import { useCidades } from "../../../hooks/useCidades";

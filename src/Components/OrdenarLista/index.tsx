@@ -11,7 +11,7 @@ export const OrdenarLista = ({ activeFilter, setActiveFilter }: OrdenarProps) =>
 
   const getButtonStyles = (id: string) => {
     const isActive = activeFilter === id;
-    return `flex flex-col justify-center items-center py-2 gap-1 rounded-lg transition-all active:scale-95 ${
+    return `flex flex-col justify-center items-center py-2 gap-1 rounded-lg cursor-pointer transition-all active:scale-95 ${
       isActive 
         ? 'bg-[#e68152] border border-[#ca7750] shadow-md shadow-[#D87C50]/20 text-white' 
         : 'bg-white border border-gray-400 text-gray-700'

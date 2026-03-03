@@ -1,5 +1,5 @@
 import { FaHouseChimney, FaKey } from "react-icons/fa6"
-import MaisFilters from "./MaisFilters"
+import MaisFilters from "./MaisFiltros"
 import { useState } from "react"
 import type { IFiltrosAvancados } from "../../types/propriedade";
 
@@ -14,7 +14,7 @@ const Filters = ({ isActiveFilter, setIsActiveFilter, filtros, setFiltros }: Fil
 
   const getButtonStyles = (filterName: string) => {
     const isActive = isActiveFilter === filterName;
-    return `flex flex-1 items-center justify-center py-2 gap-2 border rounded-3xl transition-all duration-300 ease-in-out shadow-md ${isActive
+    return `flex flex-1 items-center justify-center py-2 gap-2 border rounded-3xl transition-all duration-300 ease-in-out shadow-md cursor-pointer ${isActive
         ? 'text-white bg-[#D87C50] border-[#cb6f45]'
         : 'text-gray-700 bg-white border-gray-300'
       }`
