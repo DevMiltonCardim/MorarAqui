@@ -1,42 +1,39 @@
 export interface IFoto {
   id: number;
-  url: string;
+  urlCompleta: string;
   ordem: number;
 }
 
 export interface IPropriedade {
   id: number;
-  ativo: boolean;
-  userId: number;
   titulo: string;
   descricao: string;
-  capa: string;
-  imagens?: IFoto[];
   preco: number | string;
+  area: number;
+  quartos?: number;
+  banheiros?: number;
+  vagas?: number;
   pontoReferencia?: string;
   nomeBairro: string;
   nomeCidade: string;
-  quartos?: number;
-  banheiros?: number;
-  area: number;
-  vagas?: number;
-  tipo: 'casa' | 'apartamento' | 'terreno' | 'comercial' | 'cobertura';
-  negocio: 'venda' | 'aluguel';
-  usuario: {
-    nome: string;
-    whatsapp: string;
-  }
+  nomeAnunciante: string;
+  whatsappAnunciante: string;
+  tipo: string;
+  finalidade: string;
+  fotos: IFoto[];
 }
 
-// Feito para se utilizar nos componentes do Mais Filtros!!!
 export interface IFiltrosAvancados {
   cidade: string;
+  cidadeId: number;
+  bairroId: number;
   tipoDeImovel: string;
+  finalidade: string;
+  minPrice: number;
+  maxPrice: number;
   quartos: number;
   banheiros: number;
   vagas: number;
-  minPrice: string;
-  maxPrice: string;
 }
 
 export interface IImovelGestao extends IPropriedade {

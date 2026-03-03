@@ -15,37 +15,63 @@ const Home = () => {
   
   const [filtrosAvancados, setFiltrosAvancados] = useState<IFiltrosAvancados>({
     cidade: 'Todas',
+    cidadeId: 0, 
+    bairroId: 0,         
     tipoDeImovel: 'Todos',
-    quartos: 0,
-    banheiros: 0,
+    minPrice: 0,         
+    maxPrice: 0,        
+    quartos: 0,           
+    banheiros: 0,         
     vagas: 0,
-    minPrice: '',
-    maxPrice: '',
-  })
+    finalidade: 'todos',   
+  });
+
 
   useEffect(() => {
     const cidadeSelecionada = cidades.find(c => c.nome === filtrosAvancados.cidade);
+    
     const params: any = {};
 
     if (cidadeSelecionada && filtrosAvancados.cidade !== 'Todas') {
       params.cidadeId = cidadeSelecionada.id;
     }
 
-    if (filterNegocio !== 'todos') params.negocio = filterNegocio;
-    if (filtrosAvancados.tipoDeImovel !== 'Todos') params.tipo = filtrosAvancados.tipoDeImovel;
-    if (filtrosAvancados.minPrice) params.minPreco = filtrosAvancados.minPrice;
-    if (filtrosAvancados.maxPrice) params.maxPreco = filtrosAvancados.maxPrice;
-    if (filtrosAvancados.quartos > 0) params.quartos = filtrosAvancados.quartos;
-    if (filtrosAvancados.banheiros > 0) params.banheiros = filtrosAvancados.banheiros;
-    if (filtrosAvancados.vagas > 0) params.vagas = filtrosAvancados.vagas;
+    if (filterNegocio !== 'todos') {
+      params.finalidade = filterNegocio.toUpperCase(); 
+    }
 
-    api.get('/imoveis/busca', { params })
-      .then(res => setImoveis(res.data))
-      .catch(err => console.error("Erro ao buscar da API:", err));
+    if (filtrosAvancados.tipoDeImovel !== 'Todos') {
+      params.tipo = filtrosAvancados.tipoDeImovel.toUpperCase();
+    }
+
+    if (filtrosAvancados.maxPrice && filtrosAvancados.maxPrice > 0) {
+      params.precoMax = filtrosAvancados.maxPrice;
+    }
+
+    if (filtrosAvancados.quartos > 0) {
+      params.quartos = filtrosAvancados.quartos;
+    }
+
+    const temFiltros = Object.keys(params).length > 0;
+    const endpoint = temFiltros ? '/imoveis/busca' : '/imoveis';
+
+    api.get(endpoint, { params })
+      .then(res => {
+        const listaDeImoveis = res.data.content || []; 
+        setImoveis(listaDeImoveis);
+    })
+    .catch(err => {
+      console.error("Erro ao buscar da API:", err);
+      setImoveis([]); 
+    });
   }, [filterNegocio, filtrosAvancados, cidades]);
 
+
   const imoveisExibidos = useMemo(() => {
-    const lista = [...imoveis];
+
+    const lista = Array.isArray(imoveis) ? [...imoveis] : [];
+
+    if (lista.length === 0) return [];
 
     const parsePreco = (preco: string | number): number => {
       if (typeof preco === 'number') return preco;

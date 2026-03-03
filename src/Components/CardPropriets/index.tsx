@@ -4,13 +4,18 @@ import { FaBath, FaBed, FaCar, FaLocationDot, FaRulerCombined } from "react-icon
 import { Link } from "react-router-dom";
 
 export const CardPropriets = (imovel: IPropriedade) => {
+  const fotoPrincipal = [...imovel.fotos].sort((a, b) => a.ordem - b.ordem)[0]?.urlCompleta;
   return (
     <Link to={`/detalhes/${imovel.id}`}>
       <div className="h-120 w-full shadow-lg rounded-b-xl">
         <div className={`h-1/2 w-full overflow-hidden relative rounded-t-xl`}>
-          <img src={imovel.capa} alt={imovel.titulo} className="object-cover" />
+          <img 
+            src={fotoPrincipal} 
+            alt={imovel.titulo} 
+            className="w-full h-full object-cover" 
+          />
           <div className="bg-[#D87C50] text-white font-semibold px-3 py-1 absolute top-4 left-4 rounded-lg">
-            {imovel.negocio === 'venda' ? 'Venda' : 'Aluguel'}
+            {imovel.finalidade === 'venda' ? 'Venda' : 'Aluguel'}
           </div>
         </div>
         <div className="flex flex-col px-4 pt-3 gap-2">
